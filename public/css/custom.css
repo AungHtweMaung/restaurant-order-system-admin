@@ -177,6 +177,11 @@ a {
     background-color: #E91E63 !important;
     border-radius: 8px !important;
     color: #fff;
+    /* cursor: pointer; */
+}
+
+.sidebar .nav .nav-item:hover {
+    cursor: pointer !important;
 }
 
 /* Optional: highlight active menu item */
@@ -195,4 +200,14 @@ a {
 .btn-pink:hover {
   background-color: color-mix(in srgb, var(--bs-pink) 85%, black);
   border-color: color-mix(in srgb, var(--bs-pink) 85%, black);
+}
+
+
+@media(max-width: 400px) {
+    .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown {
+        width: 100% !important;
+        min-width: 100% !important;
+        left: 0 !important;
+        right: auto !important;
+    }
 }
