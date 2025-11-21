@@ -1,51 +1,22 @@
 <!-- partial:partials/_sidebar.html -->
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
-        <li class="nav-item {{ (isset($elementActive) && $elementActive == 'news') ? 'active' : '' }}">
+        <li class="nav-item {{ isset($elementActive) && $elementActive == 'categories' ? 'active' : '' }}">
             <a class="nav-link">
                 {{-- <i class="icon-grid menu-icon"></i> --}}
                 <i class="fa-regular fa-newspaper fa-2x menu-icon"></i>
-                <span class="menu-title">News</span>
+                <span class="menu-title">Category</span>
             </a>
         </li>
-         <li class="nav-item {{ (isset($elementActive) && $elementActive == 'news') ? 'active' : '' }}">
+        {{-- <li class="nav-item {{ isset($elementActive) && $elementActive == 'news' ? 'active' : '' }}">
             <a class="nav-link">
                 {{-- <i class="icon-grid menu-icon"></i> --}}
                 <i class="fa-regular fa-newspaper fa-2x menu-icon"></i>
                 <span class="menu-title">News</span>
             </a>
-        </li> <li class="nav-item {{ (isset($elementActive) && $elementActive == 'news') ? 'active' : '' }}">
-            <a class="nav-link">
-                {{-- <i class="icon-grid menu-icon"></i> --}}
-                <i class="fa-regular fa-newspaper fa-2x menu-icon"></i>
-                <span class="menu-title">News</span>
-            </a>
-        </li> <li class="nav-item {{ (isset($elementActive) && $elementActive == 'news') ? 'active' : '' }}">
-            <a class="nav-link">
-                {{-- <i class="icon-grid menu-icon"></i> --}}
-                <i class="fa-regular fa-newspaper fa-2x menu-icon"></i>
-                <span class="menu-title">News</span>
-            </a>
-        </li> <li class="nav-item {{ (isset($elementActive) && $elementActive == 'news') ? 'active' : '' }}">
-            <a class="nav-link">
-                {{-- <i class="icon-grid menu-icon"></i> --}}
-                <i class="fa-regular fa-newspaper fa-2x menu-icon"></i>
-                <span class="menu-title">News</span>
-            </a>
-        </li> <li class="nav-item {{ (isset($elementActive) && $elementActive == 'news') ? 'active' : '' }}">
-            <a class="nav-link">
-                {{-- <i class="icon-grid menu-icon"></i> --}}
-                <i class="fa-regular fa-newspaper fa-2x menu-icon"></i>
-                <span class="menu-title">News</span>
-            </a>
-        </li> <li class="nav-item {{ (isset($elementActive) && $elementActive == 'news') ? 'active' : '' }}">
-            <a class="nav-link">
-                {{-- <i class="icon-grid menu-icon"></i> --}}
-                <i class="fa-regular fa-newspaper fa-2x menu-icon"></i>
-                <span class="menu-title">News</span>
-            </a>
-        </li>
-    {{--
+        </li> --}}
+
+        {{--
         <li class="nav-item {{ (isset($elementActive) && $elementActive == 'trend-posts') ? 'active' : '' }} }}">
             <a class="nav-link" href="{{ route('social-posts.index') }}">
                 <i class="fa-regular fa-face-smile-beam menu-icon"></i>
@@ -61,7 +32,7 @@
         </li> --}}
 
         {{-- @if (auth()->user()->role == 'user') --}}
-            {{-- <li class="nav-item {{ (isset($elementActive) && $elementActive == 'academic-calendars') ? 'active' : '' }}">
+        {{-- <li class="nav-item {{ (isset($elementActive) && $elementActive == 'academic-calendars') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('academic-calendars.index') }}">
                 <i class="fa-regular fa-newspaper fa-2x menu-icon"></i>
                 <span class="menu-title">Academic Calendar</span>
@@ -79,7 +50,7 @@
         </li> --}}
         {{-- @endif --}}
 
-        {{-- @if(auth()->user()->role == 'admin')
+        {{-- @if (auth()->user()->role == 'admin')
             <li class="nav-item {{ isset($elementActive) && $elementActive == 'department-types' ? 'active': '' }}">
                 <a class="nav-link" href="{{ route('department-types.index') }}">
                     <i class="icon-grid menu-icon"></i>

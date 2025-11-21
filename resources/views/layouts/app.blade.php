@@ -52,17 +52,17 @@
         @include('layouts.navbar')
         {{-- sidebar --}}
         @include('layouts.sidebar')
+        {{-- <div class="main-panel"> --}}
         <div class="main-panel">
-            <div class="container">
-                <div class="row">
-                    <div class="col-10">
-                        @yield('content')
-                    </div>
-                </div>
+            <div class="content-wrapper">
+                @yield('content')
             </div>
-            <!-- content-wrapper ends -->
-            <!-- partial:partials/_footer.html -->
-            {{-- <footer class="footer">
+        </div>
+
+        @include('layouts.bs-toast-message')
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        {{-- <footer class="footer">
                 <div class="d-sm-flex justify-content-center justify-content-sm-between">
                     <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2025.
                         <a href="#" target="_blank">AUSphere</a>. All rights reserved.</span>
@@ -70,8 +70,8 @@
                         <i class="ti-heart text-danger ms-1"></i></span>
                 </div>
             </footer> --}}
-            <!-- partial -->
-        </div>
+        <!-- partial -->
+        {{-- </div> --}}
         <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
@@ -98,19 +98,11 @@
     {{-- date time flatpickr  --}}
     <script src="{{ asset('src/assets/js/flatpickr.js') }}"></script>
     <script src="{{ asset('src/assets/js/flatpickr-month-year.js') }}"></script>
-
-
-    {{-- @include('layouts.sweetalert-message') --}}
-    {{-- <script src="{{ asset('src/assets/js/pusher.js') }}"></script> --}}
-    {{-- <script src="{{ asset('src/assets/js/pusher.min.js') }}"></script> --}}
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pusher/7.0.3/pusher.min.js"></script>
 
+    {{-- toast message --}}
+
     <script src="{{ asset('js/custom.js') }}"></script>
-
-
-
-
     @stack('js')
 
 

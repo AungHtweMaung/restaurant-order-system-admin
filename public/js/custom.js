@@ -1,6 +1,3 @@
-
-
-
 $(document).ready(function () {
     // for select2
     $('select').select2();
@@ -28,9 +25,6 @@ $(document).ready(function () {
         dateFormat: "h:i K",
         allowInput: true,
     });
-
-
-
 
 
     // store, update form submit
@@ -63,232 +57,36 @@ $(document).ready(function () {
             success: function (response) {
                 $('#content').summernote('reset'); // reset to initial content
                 form[0].reset();
+                let modal = form.closest('.modal');
 
-                Swal.fire({
-                    title: 'Success',
-                    text: response.success,
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    allowOutsideClick: false, // optional: prevent closing by clicking outside
-                    allowEscapeKey: false
-                }).then((result) => {
-                    console.log(result);
-                    if (result.isConfirmed) {
-                        // Reset Summernote content if present in the form
-                        if (response.redirectUrl) {
-                            window.location.href = response.redirectUrl;
-                        }
-                    }
-                });
+                if (modal.length) {
+
+                    modal.modal('hide');
+
+                }
+
+                if (response.redirectUrl) {
+                    window.location.href = response.redirectUrl;
+                }
             },
             error: function (xhr) {
                 if (xhr.status === 422) {
                     let errors = xhr.responseJSON.errors;
                     // console.log(errors);
-                    // $.each(errors, function (field, messages) {
-                    //     let errorField = form.find('[name="' + field + '"]');
-                    //     errorField.addClass('is-invalid');
-                    //     form.find('[data-error-for="' + field + '"]').html(messages[0]);
-                    // });
-
                     $.each(errors, function (field, messages) {
-                        // error is like news.0.content and news.0.image
-                        // We need to convert it to news[0][content] and news[0][image]
-
-                        let errorField = field.replace(/\.(\d+)\./g, '[$1][')   // news.0.content => news[0][content]
-                            .replace(/\.(\w+)/g, '][$1]');    // append last key
-                        errorField = field.includes('.') ? errorField + ']' : errorField;  // close the brackets if needed
-
-                        // Escape the name for jQuery selector (to use with attributes like name="news[0][content]")
-                        let escapedField = errorField.replace(/\[/g, '\\[').replace(/\]/g, '\\]');
-
-                        let input = form.find('[name="' + errorField + '"]');
-                        input.addClass('is-invalid');
-
-                        // You should have something like: <div data-error-for="news[0][content]"></div>
-                        form.find('[data-error-for="' + escapedField + '"]').html(messages[0]);
+                        // console.log(field, messages);
+                        let errorField = form.find('[name="' + field + '"]');
+                        errorField.addClass('is-invalid');
+                        form.find('[data-error-for="' + field + '"]').html(messages[0]);
                     });
 
                 } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Oops! Something went wrong.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
+                    toastr.error('Oops! Something went wrong.', "Error");
                 }
             }
         });
 
     });
-
-    // for comment notifications
-    $('.noti-icon').on('click', function (e) {
-        e.preventDefault();
-
-        loadNotifications(); // you can wrap the above AJAX in a function called loadNotifications()
-    });
-
-    // Optional: mark notification as read when clicked
-    $(document).on('click', '.preview-item', function () {
-        let notificationId = $(this).data('id');
-
-        $.ajax({
-            url: '/notifications/mark-as-read', // or window.Laravel.markAsReadUrl
-            type: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: { id: notificationId },
-            success: function () {
-                // Optionally remove the notification from the list or refresh
-                loadNotifications(); // you can wrap the above AJAX in a function called loadNotifications()
-            }
-        });
-    });
-
-
-    function loadNotifications() {
-        $.ajax({
-            url: '/notifications/unread', // You can also use window.Laravel.unreadNotificationsUrl if passed via @json
-            type: 'GET',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Laravel CSRF support
-            },
-            success: function (response) {
-                let notifications = response.latestNotiCount;
-
-                let html = '';
-
-                $allNotiCount = response.allNotiCount;
-                if ($allNotiCount > 0) {
-                    $('#notification-count').text($allNotiCount).show();
-                } else {
-                    $('#notification-count').hide();
-                }
-
-                if (notifications.length === 0) {
-                    html = '<p class="dropdown-item">No new notifications</p>';
-                } else {
-                    notifications.forEach(function (noti) {
-                        html += `
-                        <a href="${noti.data.url || '#'}" class="dropdown-item preview-item" data-id="${noti.id}">
-                            <div class="preview-item-content">
-                                <p class="preview-subject mb-1">${noti.data.message}</p>
-                                <p class="text-muted ellipsis mb-0">${new Date(noti.created_at).toLocaleString()}</p>
-                            </div>
-                        </a>
-                    `;
-                    });
-                }
-
-                $('#noti_list').html(html);
-            },
-            error: function (xhr) {
-                console.log('Error fetching notifications', xhr);
-            }
-        });
-    }
-
-
-
-
-
-    $('.chat-noti-icon').on('click', function (e) {
-        e.preventDefault();
-
-        chatLoadNotifications(); // you can wrap the above AJAX in a function called loadNotifications()
-    });
-
-    // Optional: mark notification as read when clicked
-    // $(document).on('click', '.preview-item', function () {
-    //     let notificationId = $(this).data('id');
-
-    //     $.ajax({
-    //         url: '/notifications/mark-as-read', // or window.Laravel.markAsReadUrl
-    //         type: 'POST',
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         data: { id: notificationId },
-    //         success: function () {
-    //             // Optionally remove the notification from the list or refresh
-    //             chatLoadNotifications(); // you can wrap the above AJAX in a function called loadNotifications()
-    //         }
-    //     });
-    // });
-
-
-    function chatLoadNotifications() {
-        $.ajax({
-            url: '/notifications/unread/chat',
-            type: 'GET',
-
-            success: function (response) {
-                let notifications = response.latestChatNotifications;
-                console.log(notifications);
-
-                let html = '';
-
-                $allNotiCount = response.allChatNotiCount;
-                if ($allNotiCount > 0) {
-                    $('#chat-notification-count').text($allNotiCount).show();
-                } else {
-                    $('#chat-notification-count').hide();
-                }
-
-                if (notifications.length === 0) {
-                    html = '<p class="dropdown-item">No new notifications</p>';
-                } else {
-                    notifications.forEach(function (noti) {
-                        html += `
-                        <a href="${noti.data.url || '#'}" class="dropdown-item preview-item chat-notification" data-id="${noti.id}" data-sender-id="${noti.data.sender_id}">
-                            <div class="preview-item-content">
-                                <p class="preview-subject mb-1">${noti.data.message}</p>
-                                <p class="text-muted ellipsis mb-0">${new Date(noti.created_at).toLocaleString()}</p>
-                            </div>
-                        </a>
-                    `;
-                    });
-                }
-
-                $('#chat_noti_list').html(html);
-            },
-            error: function (xhr) {
-                console.log('Error fetching notifications', xhr);
-            }
-        });
-    }
-
-    // Handle click on chat notification to redirect and mark as read
-    $(document).on('click', '.chat-notification', function(e) {
-        e.preventDefault();
-        let notificationId = $(this).data('id');
-        let senderId = $(this).data('sender-id');
-
-        // Store senderId in localStorage
-        localStorage.setItem('chat_sender_id', senderId);
-
-        // Mark notification as read
-        $.ajax({
-            url: '/notifications/mark-as-read',
-            type: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: { id: notificationId },
-            success: function() {
-                // Redirect to chat page
-                window.location.href = '/chats';
-            },
-            error: function() {
-                // Redirect anyway if error
-                window.location.href = '/chats';
-            }
-        });
-    });
-
-
 
 
     // // store, update form submit
@@ -510,4 +308,16 @@ $(document).ready(function () {
         //     }
         // }
     });
+
+    // Show toast message if present (for success/error sessions after reload)
+    if ($('.toast').length) {
+        $('.toast').toast({
+            autohide: true,
+            delay: 5000 // Adjust delay as needed, e.g., 5 seconds
+        });
+        $('.toast').toast('show');
+    }
 });
+
+
+
