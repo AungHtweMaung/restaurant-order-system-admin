@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained('categories');
+            $table->unsignedBigInteger('category_id');
             $table->string('eng_name');
             $table->string('mm_name');
             $table->integer('price')->nullable();
