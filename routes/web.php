@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,15 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
+    // categories
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
     Route::post('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+
+    // menus
+    Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
+    Route::post('/menus', [MenuController::class, 'store'])->name('menus.store');
 });

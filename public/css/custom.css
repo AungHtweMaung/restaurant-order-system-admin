@@ -1,3 +1,7 @@
+:root {
+  --sidebar-zindex: 11;
+  --modal-zindex: 2000;
+}
 
 /* custom scrollbar  */
 html::-webkit-scrollbar {
@@ -100,14 +104,16 @@ a {
 }
 
 /* modal box backdrop fix */
-.modal-backdrop.show {
-    display: none !important;
-}
 .modal-dialog {
     margin-top: 80px;
 }
 .border-purple {
     border: 3px solid #dc12d1;
+}
+
+.modal-content {
+    background-color: #0e2443;
+    color: #fff;
 }
 
 
@@ -165,6 +171,10 @@ a {
 }
 
 /* navbar */
+.sidebar {
+    z-index: var(--sidebar-zindex);
+}
+
 /* Hover + active styles only on the nav-link */
 .sidebar .nav .nav-item .nav-link:hover,
 .sidebar .nav .nav-item .nav-link:focus,
@@ -180,10 +190,8 @@ a {
 }
 
 /* Optional: highlight active menu item */
-.sidebar .nav .nav-item .nav-link.active {
-    background-color: #E91E63 !important;
-    border-radius: 8px;
-    color: #fff;
+.sidebar .nav .nav-item.active > .nav-link {
+    background-color: var(--bs-pink);
 }
 
 .btn-pink {
@@ -206,16 +214,3 @@ a {
         right: auto !important;
     }
 }
-
-@media (max-width: 990px) {
-    .dynamic-content {
-        margin-left: 0px !important;
-    }
-}
-
-/* Remove modal backdrop opacity for create category modal */
-/* .modal-backdrop.show {
-    opacity: 0.3;
-} */
-
-
