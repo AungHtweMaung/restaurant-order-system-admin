@@ -212,6 +212,14 @@ a {
     color: #fff;
 }
 
+.main-content {
+    margin-left: 235px;
+}
+
+body.sidebar-icon-only .main-content {
+  margin-left: 100px; /* move content to right */
+}
+
 
 @media(max-width: 400px) {
     .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown {
@@ -222,8 +230,8 @@ a {
     }
 }
 
-/* @media(max-width: 991px) {
+@media(max-width: 991px) {
     .main-content {
         margin-left: 0px !important;
     }
-} */
+}
