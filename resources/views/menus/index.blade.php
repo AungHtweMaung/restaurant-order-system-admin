@@ -2,6 +2,18 @@
     'elementActive' => 'menus',
 ])
 
+@section('css')
+    <style>
+        input[type="file"]:focus {
+            background-color: #0e2443;
+            /* or any color you want */
+            border: 1px solid #ccc;
+            /* optional, for visible focus */
+        }
+
+
+    </style>
+@endsection
 @section('content')
     <div>
         {{-- Toast messages --}}
@@ -29,6 +41,7 @@
                         <th>Myanmar Name</th>
                         <th>Price</th>
                         <th>Is Available</th>
+                        <th>Image</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -42,20 +55,35 @@
                             <td>{{ $menu->eng_name }}</td>
                             <td>{{ $menu->mm_name }}</td>
                             <td>{{ $menu->price ? $menu->price : '-' }}</td>
-                            <td>{{ $menu->is_available ? 'Yes' : 'No' }}</td>
                             <td>
-                                {{-- <button type="button" class="btn btn-sm btn-warning me-2" data-bs-toggle="modal"
-                                    data-bs-target="#editMenuModal">
+                                @if ($menu->is_available)
+                                    <span class="badge rounded-pill text-bg-success text-white fw-bolder">Yes</span>
+                                @else
+                                    <span class="badge rounded-pill text-bg-danger text-white fw-bolder">No</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($menu->image_path && file_exists(public_path('storage/' . $menu->image)))
+                                    <a href="{{ asset('storage/' . $menu->image_path) }}" target="blank">
+                                        <img src="{{ asset('storage/' . $menu->image_path) }}"
+                                            style="width: 100px; height: 100px; border-radius: 0"></a>
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-warning me-2" data-bs-toggle="modal"
+                                    data-bs-target="#editMenuModal" onclick="editMenu({{ $menu->id }})">
                                     <i class="far fa-edit"></i>
                                 </button>
-                                <form action="" method="POST" style="display:inline;">
+                                <form action="{{route('menus.destroy', $menu->id)}}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger text-white"
                                         onclick="return confirm('Are you sure you want to delete this menu?')">
                                         <i class="fa-solid fa-trash-can"></i>
                                     </button>
-                                </form> --}}
+                                </form>
                                 {{-- <form action="{{ route('menus.destroy', $category->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf
@@ -90,7 +118,8 @@
             <div class="modal-content border-purple">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Menu</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <form action="{{ route('menus.store') }}" method="POST" enctype="multipart/form-data" id="createMenuForm"
                     class="form-submit">
@@ -101,7 +130,8 @@
                             <select class="form-select" id="category_id" name="category_id" required>
                                 <option value="" selected disabled>Select Category</option>
                                 @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->eng_name }} / {{ $category->mm_name }}
+                                    <option value="{{ $category->id }}">{{ $category->eng_name }} /
+                                        {{ $category->mm_name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -139,13 +169,13 @@
                                 accept="image/*">
                             <div class="invalid-feedback" data-error-for="image_path"></div>
                         </div>
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <input type="checkbox" class="form-check-input" id="is_available" name="is_available"
                                 checked>
                             <label class="form-check-label" for="is_available">Is Available</label>
                             <div class="invalid-feedback" data-error-for="is_available"></div>
 
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -156,32 +186,81 @@
         </div>
     </div>
 
-    <!-- Edit Category Modal -->
+    <!-- Edit Menu Modal -->
     <div class="modal fade" id="editMenuModal" tabindex="-1" aria-labelledby="editMenuModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="max-width: 800px;">
             <div class="modal-content border-purple">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Category</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Edit Menu</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
-                <form id="editCategoryForm" action="#" method="POST" class="form-submit">
+                <form id="editMenuForm" action="#" method="POST" class="form-submit">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="edit_eng_name" class="form-label">English Name</label>
-                            <input type="text" class="form-control" id="edit_eng_name" name="eng_name">
-                            <div class="invalid-feedback" data-error-for="eng_name"></div>
+                            <label for="edit_category_id" class="form-label">Category <span
+                                    class="text-danger">*</span></label>
+                            <select class="form-select" id="edit_category_id" name="edit_category_id" required>
+                                <option value="" disabled>Select Category</option>
+                                @foreach ($categories as $category)
+                                    <option {{ $category->id == $category->category_id ? 'selected' : '' }}
+                                        value="{{ $category->id }}">{{ $category->eng_name }} /
+                                        {{ $category->mm_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="invalid-feedback" data-error-for="edit_category_id"></div>
                         </div>
                         <div class="mb-3">
-                            <label for="edit_mm_name" class="form-label">Myanmar Name</label>
-                            <input type="text" class="form-control" id="edit_mm_name" name="mm_name">
-                            <div class="invalid-feedback" data-error-for="mm_name"></div>
+                            <label for="edit_eng_name" class="form-label">English Name <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit_eng_name" name="edit_eng_name" required>
+                            <div class="invalid-feedback" data-error-for="edit_eng_name"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_mm_name" class="form-label">Myanmar Name <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit_mm_name" name="edit_mm_name" required>
+                            <div class="invalid-feedback" data-error-for="edit_mm_name"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_price" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="edit_price" name="edit_price" min="0"
+                                step="1">
+                            <div class="invalid-feedback" data-error-for="edit_price"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_eng_description" class="form-label">English Description</label>
+                            <textarea name="edit_eng_description" id="edit_eng_description" cols="30" rows="10" class="form-control"></textarea>
+                            <div class="invalid-feedback" data-error-for="edit_eng_description"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_mm_description" class="form-label">Myanmar Description</label>
+                            <textarea name="edit_mm_description" id="edit_mm_description" cols="30" rows="10" class="form-control"></textarea>
+                            <div class="invalid-feedback" data-error-for="edit_mm_description"></div>
+                        </div>
+                        <div class="mb-3">
+                            <div id="image_container">
+
+                            </div>
+                            <label for="edit_image_path" class="form-label">Image</label>
+                            <input type="file" class="form-control form-control-dark text-white" id="edit_image_path"
+                                name="edit_image_path" accept="image/*">
+                            <div class="invalid-feedback" data-error-for="edit_image_path"></div>
+                        </div>
+                        <div class="mb-3">
+                            <input type="checkbox" class="form-check-input" id="edit_is_available"
+                                name="edit_is_available" checked>
+                            <label class="form-check-label" for="edit_is_available">Is Available</label>
+                            <div class="invalid-feedback" data-error-for="edit_is_available"></div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary text-white"
                             data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update Category</button>
+                        <button type="submit" class="btn btn-primary">Update Menu</button>
                     </div>
                 </form>
             </div>
@@ -191,21 +270,55 @@
 
 @push('js')
     <script>
-$(document).ready(function() {
-    // Clear create menu modal form and validation on close
-    $('#createMenuModal').on('hidden.bs.modal', function() {
-        const form = $('#createMenuForm')[0];
-        form.reset();
-        $(this).find('.invalid-feedback').text('');
-        $(this).find('.form-control').removeClass('is-invalid');
-    });
+        function editMenu(id) {
+            $.ajax({
+                url: '{{ route('menus.show', ':id') }}'.replace(':id', id),
+                type: 'GET',
+                success: function(data) {
+                    console.log(data);
+                    const form = document.getElementById('editMenuForm');
+                    form.action = '{{ route('menus.update', ':id') }}'.replace(':id', id);
+                    $('#edit_category_id').val(data.category_id).trigger('change');
+                    $('#edit_eng_name').val(data.eng_name);
+                    $('#edit_mm_name').val(data.mm_name);
+                    $('#edit_price').val(data.price);
+                    $('#edit_eng_description').val(data.eng_description);
+                    $('#edit_mm_description').val(data.mm_description);
+                    $('#edit_is_available').prop('checked', data.is_available);
 
-    // Initialize select2 for category_id in modal with dropdownParent to fix modal conflict
-    $('#createMenuModal').on('shown.bs.modal', function() {
-        $('#category_id').select2({
-            dropdownParent: $('#createMenuModal')
+                    if (data.image_path) {
+                        let baseUrl = "{{ asset('storage') }}";
+                        $('#image_container').html(
+                            '<img src="' + baseUrl + '/' + data.image_path +
+                            '" style="width:100px;height:100px;">'
+                        );
+                    }
+                },
+                error: function() {
+                    toastr.error('Failed to fetch menu data.', 'Error');
+                }
+            });
+        }
+        // Clear create menu modal form and validation on close
+        $('#createMenuModal').on('hidden.bs.modal', function() {
+            const form = $('#createMenuForm')[0];
+            form.reset();
+            $(this).find('.invalid-feedback').text('');
+            $(this).find('.form-control').removeClass('is-invalid');
         });
-    });
-});
+
+        // Initialize select2 for category_id in createMenu modal with dropdownParent to fix modal conflict
+        $('#createMenuModal').on('shown.bs.modal', function() {
+            $('#category_id').select2({
+                dropdownParent: $('#createMenuModal')
+            });
+        });
+
+        // Initialize select2 for category_id in editMenu modal with dropdownParent to fix modal conflict
+        $('#editMenuModal').on('shown.bs.modal', function() {
+            $('#edit_category_id').select2({
+                dropdownParent: $('#editMenuModal')
+            });
+        });
     </script>
 @endpush
