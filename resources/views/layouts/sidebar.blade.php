@@ -15,6 +15,7 @@
                 <span class="menu-title">Menu</span>
             </a>
         </li>
+        
 
         {{--
         <li class="nav-item {{ (isset($elementActive) && $elementActive == 'trend-posts') ? 'active' : '' }} }}">
