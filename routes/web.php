@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ModifierController;
+use App\Http\Controllers\MenuVariantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,4 +42,22 @@ Route::middleware([
     // menus
     Route::get('/menus', [MenuController::class, 'index'])->name('menus.index');
     Route::post('/menus', [MenuController::class, 'store'])->name('menus.store');
+    Route::get('/menus/{menu}', [MenuController::class, 'show'])->name('menus.show');
+    Route::post('/menus/{menu}', [MenuController::class, 'update'])->name('menus.update');
+    Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->name('menus.destroy');
+
+    // menu_variants
+    Route::get('/menu-variants', [MenuVariantController::class, 'index'])->name('menu-variants.index');
+    Route::post('/menu-variants', [MenuVariantController::class, 'store'])->name('menu-variants.store');
+    Route::get('/menu-variants/{menuVariant}', [MenuVariantController::class, 'show'])->name('menu-variants.show');
+    Route::post('/menu-variants/{menuVariant}', [MenuVariantController::class, 'update'])->name('menu-variants.update');
+    Route::delete('/menu-variants/{menuVariant}', [MenuVariantController::class, 'destroy'])->name('menu-variants.destroy');
+
+    // modifiers
+    Route::get('/modifiers', [ModifierController::class, 'index'])->name('modifiers.index');
+    Route::post('/modifiers', [ModifierController::class, 'store'])->name('modifiers.store');
+    Route::get('/modifiers/{modifier}', [ModifierController::class, 'show'])->name('modifiers.show');
+    Route::post('/modifiers/{modifier}', [ModifierController::class, 'update'])->name('modifiers.update');
+    Route::delete('/modifiers/{modifier}', [ModifierController::class, 'destroy'])->name('modifiers.destroy');
+
 });
