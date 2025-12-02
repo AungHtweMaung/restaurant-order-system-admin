@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\ModifierStoreRequest;
+use App\Http\Requests\ModifierUpdateRequest;
+use App\Models\Modifier;
+use Illuminate\Http\Request;
+
+class ModifierController extends Controller
+{
+    public function index()
+    {
+        $modifiers = Modifier::filter()->latest()->paginate(10);
+        return view('modifiers.index', compact('modifiers'));
+    }
+
+    public function show(Modifier $modifier)
+    {
+        return response()->json($modifier);
+    }
+
+    public function store(ModifierStoreRequest $request)
+    {
+        Modifier::create([
+            'name' => $request->name,
+            'type' => $request->type,
+        ]);
+
+        session()->flash('success', 'Modifier created successfully.');
+
+        return response()->json(['redirectUrl' => route('modifiers.index')]);
+    }
+
+    public function update(ModifierUpdateRequest $request, Modifier $modifier)
+    {
+        $modifier->update([
+            'name' => $request->name,
+            'type' => $request->type,
+        ]);
+
+        session()->flash('success', 'Modifier updated successfully.');
+
+        return response()->json(['redirectUrl' => route('modifiers.index')]);
+    }
+
+    public function destroy(Modifier $modifier)
+    {
+        $modifier->delete();
+
+        session()->flash('success', 'Modifier deleted successfully.');
+
+        return redirect()->route('modifiers.index');
+    }
+}

@@ -29,7 +29,7 @@ class CategoryController extends Controller
 
         session()->flash('success', 'Category created successfully.');
 
-        return response()->json(['success' => 'Category created successfully.', 'redirectUrl' => route('categories.index')]);
+        return response()->json(['redirectUrl' => route('categories.index')]);
     }
 
     public function update(CategoryUpdateRequest $request, Category $category)
@@ -41,7 +41,7 @@ class CategoryController extends Controller
 
         session()->flash('success', 'Category updated successfully.');
 
-        return response()->json(['success' => 'Category updated successfully.', 'redirectUrl' => route('categories.index')]);
+        return response()->json(['redirectUrl' => route('categories.index')]);
     }
 
     public function destroy(Category $category)

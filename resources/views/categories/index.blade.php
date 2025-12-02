@@ -4,9 +4,6 @@
 
 @section('content')
     <div>
-        {{-- Toast messages --}}
-        {{-- @include('layouts.toast-message') --}}
-
         <h2 class="text-center my-3">Category</h2>
 
         <div class="d-flex flex-md-row flex-column-reverse justify-content-between mb-3">

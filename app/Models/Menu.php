@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Menu extends Model
 {
@@ -19,4 +21,16 @@ class Menu extends Model
         'image_path',
         'is_available',
     ];
+
+    public function scopeFilter(Builder $query) {
+        if (request('searchName')) {
+            $query->where('eng_name', 'like', '%'. request('searchName'). '%')
+                ->orwhere('mm_name', 'like', '%'. request('searchName'). '%');
+        }
+    }
+
+    public function menuVariants(): HasMany
+    {
+        return $this->hasMany(MenuVariant::class);
+    }
 }

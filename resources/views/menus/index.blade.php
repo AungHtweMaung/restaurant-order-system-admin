@@ -29,7 +29,7 @@
                 </button>
             </div>
 
-            {{-- @include('filters.category-filter') --}}
+            @include('filters.menu-filter')
         </div>
 
         <div class="table-responsive">
@@ -169,13 +169,13 @@
                                 accept="image/*">
                             <div class="invalid-feedback" data-error-for="image_path"></div>
                         </div>
-                        {{-- <div class="mb-3">
+                        <div class="mb-3">
                             <input type="checkbox" class="form-check-input" id="is_available" name="is_available"
                                 checked>
                             <label class="form-check-label" for="is_available">Is Available</label>
                             <div class="invalid-feedback" data-error-for="is_available"></div>
 
-                        </div> --}}
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
