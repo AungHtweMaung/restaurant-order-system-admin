@@ -24,8 +24,8 @@ class ModifierUpdateRequest extends FormRequest
         $modifierId = $this->route('modifier')->id;
 
         return [
-            'name' => 'required|string|max:255|unique:modifiers,name,' . $modifierId,
-            'type' => 'required|in:avoid,addon,flavor',
+            'edit_name' => 'required|string|max:255|unique:modifiers,name,' . $modifierId,
+            'edit_type' => 'required|in:avoid,addon,flavor',
         ];
     }
 

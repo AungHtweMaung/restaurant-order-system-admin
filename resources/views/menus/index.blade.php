@@ -16,9 +16,6 @@
 @endsection
 @section('content')
     <div>
-        {{-- Toast messages --}}
-        {{-- @include('layouts.toast-message') --}}
-
         <h2 class="text-center my-3">Menu</h2>
 
         <div class="d-flex flex-md-row flex-column-reverse justify-content-between mb-3">
@@ -37,8 +34,8 @@
                 <thead class="table-dark">
                     <tr>
                         <th>No</th>
-                        <th>English Name</th>
-                        <th>Myanmar Name</th>
+                        <th>Name</th>
+
                         <th>Price</th>
                         <th>Is Available</th>
                         <th>Image</th>
@@ -52,8 +49,7 @@
                     @forelse($menus as $menu)
                         <tr>
                             <td>{{ $index }}</td>
-                            <td>{{ $menu->eng_name }}</td>
-                            <td>{{ $menu->mm_name }}</td>
+                            <td>{{ $menu->eng_name }}<br><br>{{ $menu->mm_name }}</td>
                             <td>{{ $menu->price ? $menu->price : '-' }}</td>
                             <td>
                                 @if ($menu->is_available)

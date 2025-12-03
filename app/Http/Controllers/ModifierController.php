@@ -25,6 +25,7 @@ class ModifierController extends Controller
         Modifier::create([
             'name' => $request->name,
             'type' => $request->type,
+            'price' => $request->price,
         ]);
 
         session()->flash('success', 'Modifier created successfully.');
@@ -35,8 +36,9 @@ class ModifierController extends Controller
     public function update(ModifierUpdateRequest $request, Modifier $modifier)
     {
         $modifier->update([
-            'name' => $request->name,
-            'type' => $request->type,
+            'name' => $request->edit_name,
+            'type' => $request->edit_type,
+            'price' => $request->edit_price,
         ]);
 
         session()->flash('success', 'Modifier updated successfully.');
