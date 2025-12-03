@@ -13,6 +13,7 @@ class Modifier extends Model
     protected $fillable = [
         'name',
         'type',
+        'price',
     ];
 
     public function scopeFilter($query)
