@@ -26,6 +26,7 @@ class ModifierController extends Controller
             'name' => $request->name,
             'type' => $request->type,
             'price' => $request->price,
+            'selection_type' => $request->selection_type,
         ]);
 
         session()->flash('success', 'Modifier created successfully.');
@@ -39,6 +40,7 @@ class ModifierController extends Controller
             'name' => $request->edit_name,
             'type' => $request->edit_type,
             'price' => $request->edit_price,
+            'selection_type' => $request->edit_selection_type,
         ]);
 
         session()->flash('success', 'Modifier updated successfully.');

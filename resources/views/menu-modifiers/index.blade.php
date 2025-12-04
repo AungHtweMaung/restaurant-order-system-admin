@@ -32,10 +32,7 @@
                             <td>{{ $index }}</td>
                             <td>{{ $menu->eng_name }}<br><br>{{ $menu->mm_name }}</td>
                             <td>
-                                <a href="{{route('menu-modifiers.create')}}" type="button" class="btn btn-sm btn-warning me-2">
-                                    <i class="far fa-add"></i>
-                                </a>
-                                <a type="button" class="btn btn-sm btn-warning me-2">
+                                <a href="{{route('menus.modifiers.create', $menu)}}" type="button" class="btn btn-sm btn-warning me-2">
                                     <i class="far fa-edit"></i>
                                 </a>
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ModifierController;
 use App\Http\Controllers\MenuVariantController;
+use App\Http\Controllers\MenuModifierController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,14 @@ Route::middleware([
     Route::post('/menus/{menu}', [MenuController::class, 'update'])->name('menus.update');
     Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->name('menus.destroy');
 
+    // menu modifiers
+    Route::get('/menu-modifiers', [MenuModifierController::class, 'index'])->name('menu-modifiers.index');
+    Route::get('/menu/{menu}/menu-modifiers', [MenuModifierController::class, 'create'])->name('menus.modifiers.create');
+    Route::post('/menu/{menu}/menu-modifiers', [MenuModifierController::class, 'store'])->name('menus.modifiers.store');
+
+    // Route::post('/menus/{menu}/modifiers', [MenuModifierController::class, 'store'])
+    //     ->name('menus.modifiers.store');
+
     // menu_variants
     Route::get('/menu-variants', [MenuVariantController::class, 'index'])->name('menu-variants.index');
     Route::post('/menu-variants', [MenuVariantController::class, 'store'])->name('menu-variants.store');
@@ -59,5 +68,6 @@ Route::middleware([
     Route::get('/modifiers/{modifier}', [ModifierController::class, 'show'])->name('modifiers.show');
     Route::post('/modifiers/{modifier}', [ModifierController::class, 'update'])->name('modifiers.update');
     Route::delete('/modifiers/{modifier}', [ModifierController::class, 'destroy'])->name('modifiers.destroy');
+
 
 });

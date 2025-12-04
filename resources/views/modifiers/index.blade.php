@@ -23,7 +23,9 @@
                     <tr>
                         <th>No</th>
                         <th>Name</th>
-                        <th>Type</th>
+                        <th>Modifier Type</th>
+                        <th>Price</th>
+                        <th>Selection Type</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -36,6 +38,8 @@
                             <td>{{ $index }}</td>
                             <td>{{ $modifier->name }}</td>
                             <td>{{ ucfirst($modifier->type) }}</td>
+                            <td>{{ $modifier->price ?? '-' }}</td>
+                            <td>{{ ucfirst($modifier->selection_type) }}</td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-warning me-2" data-bs-toggle="modal"
                                     data-bs-target="#editModifierModal" onclick="editModifier({{ $modifier->id }})">
@@ -69,7 +73,8 @@
     </div>
 
     <!-- Create Modifier Modal -->
-    <div class="modal fade" id="createModifierModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createModifierModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createModifierModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="createModifierModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content border-purple">
                 <div class="modal-header">
@@ -81,18 +86,34 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="name" name="name">
+                            <input type="text" class="form-control" id="name" name="name" required>
                             <div class="invalid-feedback" data-error-for="name"></div>
                         </div>
                         <div class="mb-3">
-                            <label for="type" class="form-label">Type <span class="text-danger">*</span></label>
-                            <select class="form-control" id="type" name="type">
-                                <option value="">Select Type</option>
+                            <label for="type" class="form-label">Modifier Type <span class="text-danger">*</span></label>
+                            <select class="form-control" id="type" name="type" required>
+                                <option value="" disabled selected>Select Modifier Type</option>
+
+                                <option value="protein">Protein</option>
                                 <option value="avoid">Avoid</option>
                                 <option value="addon">Addon</option>
                                 <option value="flavor">Flavor</option>
                             </select>
                             <div class="invalid-feedback" data-error-for="type"></div>
+                        </div>
+                        <div class="mb-3" id="price_div">
+                            <label for="price" class="form-label">Price <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="price" name="price" min="0">
+                            <div class="invalid-feedback" data-error-for="price"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="selection_type" class="form-label">Choose Selection Type <span class="text-danger">*</span></label>
+                            <select class="form-control" id="selection_type" name="selection_type" required>
+                                <option value="" disabled selected>Choose Selection Type</option>
+                                <option value="single">Single</option>
+                                <option value="multiple">Multiple</option>
+                            </select>
+                            <div class="invalid-feedback" data-error-for="selection_type"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -118,22 +139,40 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="edit_name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="edit_name" name="name" required>
+                            <input type="text" class="form-control" id="edit_name" name="edit_name" required>
                             <div class="invalid-feedback" data-error-for="name"></div>
                         </div>
                         <div class="mb-3">
-                            <label for="edit_type" class="form-label">Type</label>
-                            <select class="form-control" id="edit_type" name="type" required>
+                            <label for="edit_type" class="form-label">Modifier Type</label>
+                            <select class="form-control" id="edit_type" name="edit_type" required>
                                 <option value="">Select Type</option>
+                                <option value="protein">Protein</option>
                                 <option value="avoid">Avoid</option>
                                 <option value="addon">Addon</option>
                                 <option value="flavor">Flavor</option>
                             </select>
-                            <div class="invalid-feedback" data-error-for="type"></div>
+                            <div class="invalid-feedback" data-error-for="edit_type"></div>
+                        </div>
+                        <div class="mb-3" id="edit_price_div">
+                            <label for="edit_price" class="form-label">Price <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="edit_price" name="edit_price"
+                                min="0">
+                            <div class="invalid-feedback" data-error-for="edit_price"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_selection_type" class="form-label">Choose Selection Type</label>
+                            <select class="form-control" id="edit_selection_type" name="edit_selection_type" required>
+                                <option value="" disabled selected>Choose Selection Type</option>
+                                <option value="single">Single</option>
+                                <option value="multiple">Multiple</option>
+
+                            </select>
+                            <div class="invalid-feedback" data-error-for="edit_selection_type"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary text-white" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary text-white"
+                            data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Update Modifier</button>
                     </div>
                 </form>
@@ -153,6 +192,31 @@
                     form.action = '{{ route('modifiers.update', ':id') }}'.replace(':id', id);
                     $('#edit_name').val(data.name);
                     $('#edit_type').val(data.type).trigger('change');
+                    $('#edit_selection_type').val(data.selection_type).trigger('change');
+                    $('#edit_price').val(data.price || '');
+                    if (data.type === 'addon') {
+                        $('#edit_price').prop('disabled', false);
+                        $('#edit_price').prop('required', true);
+                        $('#edit_price_div').show();
+                    } else {
+                        $('#edit_price').prop('disabled', true);
+                        $('#edit_price_div').hide();
+                    }
+
+                    $('#edit_type').on('change', function() {
+                        if ($('#edit_type').val() === 'addon') {
+                            $('#edit_price').prop('disabled', false);
+                            $('#edit_price').prop('required', true);
+                            $('#edit_price_div').show();
+                        } else {
+
+                            $('#edit_price').prop('disabled', true);
+                            $('#edit_price_div').hide();
+
+                        }
+                    })
+
+
                 },
                 error: function() {
                     toastr.error('Failed to fetch modifier data.', 'Error');
@@ -161,6 +225,21 @@
         }
 
         $(document).ready(function() {
+            $('#price_div').hide();
+            $('#type').on('change', function() {
+                if ($('#type').val() === 'addon') {
+                    $('#price').prop('disabled', false);
+                    $('#price').prop('required', true);
+                    $('#price_div').show();
+                } else {
+                    $('')
+                    $('#price').prop('disabled', true);
+                    $('#price_div').hide();
+
+                }
+            })
+
+
             // Clear create modal form when closed
             $('#createModifierModal').on('hidden.bs.modal', function() {
                 const form = $('#createModifierForm')[0];
@@ -191,8 +270,20 @@
                 });
             });
 
+            $('#createModifierModal').on('shown.bs.modal', function() {
+                $('#selection_type').select2({
+                    dropdownParent: $('#createModifierModal')
+                });
+            });
+
             $('#editModifierModal').on('shown.bs.modal', function() {
                 $('#edit_type').select2({
+                    dropdownParent: $('#editModifierModal')
+                });
+            });
+
+            $('#editModifierModal').on('shown.bs.modal', function() {
+                $('#edit_selection_type').select2({
                     dropdownParent: $('#editModifierModal')
                 });
             });

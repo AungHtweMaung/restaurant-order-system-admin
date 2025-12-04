@@ -25,7 +25,9 @@ class ModifierUpdateRequest extends FormRequest
 
         return [
             'edit_name' => 'required|string|max:255|unique:modifiers,name,' . $modifierId,
-            'edit_type' => 'required|in:avoid,addon,flavor',
+            'edit_type' => 'required|in:avoid,addon,flavor,protein',
+            'edit_price' => 'nullable|integer|required_if:edit_type,addon|min:0',
+            'edit_selection_type' => 'required|in:single,multiple',
         ];
     }
 
@@ -37,10 +39,10 @@ class ModifierUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'The name is required.',
-            'name.unique' => 'The name must be unique.',
-            'type.required' => 'The type is required.',
-            'type.in' => 'The type must be one of: avoid, addon, flavor.',
+            // 'name.required' => 'The name is required.',
+            // 'name.unique' => 'The name must be unique.',
+            // 'type.required' => 'The type is required.',
+            // 'type.in' => 'The type must be one of: avoid, addon, flavor.',
         ];
     }
 }
