@@ -12,15 +12,7 @@ class MenuModifier extends Model
     protected $fillable = [
         'menu_id',
         'modifier_id',
+        'price'
     ];
 
-    public function menu()
-    {
-        return $this->belongsTo(Menu::class);
-    }
-
-    public function modifier()
-    {
-        return $this->belongsTo(Modifier::class);
-    }
 }

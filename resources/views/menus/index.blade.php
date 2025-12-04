@@ -80,6 +80,9 @@
                                         <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </form>
+                                <a href="{{route('menus.modifiers.create', $menu)}}" type="button" class="btn btn-sm btn-primary me-2">
+                                    Update Modifiers
+                                </a>
                                 {{-- <form action="{{ route('menus.destroy', $category->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf

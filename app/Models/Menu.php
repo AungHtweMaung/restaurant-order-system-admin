@@ -33,4 +33,10 @@ class Menu extends Model
     {
         return $this->hasMany(MenuVariant::class);
     }
+
+    public function modifiers()
+{
+    return $this->belongsToMany(Modifier::class, 'menu_modifiers')
+                ->withPivot('price'); // << include the pivot column here
+}
 }

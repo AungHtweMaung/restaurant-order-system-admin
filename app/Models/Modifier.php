@@ -14,6 +14,7 @@ class Modifier extends Model
         'name',
         'type',
         'price',
+        'selection_type',
     ];
 
     public function scopeFilter($query)
@@ -23,5 +24,11 @@ class Modifier extends Model
         }
 
         return $query;
+    }
+
+    public function menus()
+    {
+        return $this->belongsToMany(Menu::class, 'menu_modifiers', 'modifier_id', 'menu_id')
+            ->withPivot('price');;
     }
 }
