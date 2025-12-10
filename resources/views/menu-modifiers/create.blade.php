@@ -40,7 +40,7 @@
                         @endphp
                         @foreach ($groupedModifiers as $type => $mods)
                             <h4 class="text-capitalize" style="color: var(--bs-pink)">{{ $type }}</h4>
-                            <div class="row">
+                            <div class="row">Hello this is tested code 
                                 @foreach ($mods as $modifier)
                                     <div class="col-6 col-lg-3 my-2">
                                         <div class="form-check">
