@@ -18,16 +18,22 @@
                         <div class="invalid-feedback" data-error-for="menu_id"></div>
                     </div>
 
-                    <div class="row mb-3 justify-content-end">
+                    <div class="row mb-3">
                         <label class="form-label fs-5 mb-3">Modifiers</label>
                         {{-- @dd($menu->modifiers) --}}
+                        @php
+                            $index = 1;
+                        @endphp
                         @foreach ($menu->modifiers as $modifier)
                             <div class="col-6 col-lg-3">
-                                {{ $modifier->name }}
+                                {{ $index }}.{{ $modifier->name }}
                                 @if (!is_null($modifier->pivot->price))
                                     ({{ $modifier->pivot->price }} )
                                 @endif
                             </div>
+                            @php
+                                $index++;
+                            @endphp
                         @endforeach
                         @php
                             $groupedModifiers = $modifiers->groupBy('type');
