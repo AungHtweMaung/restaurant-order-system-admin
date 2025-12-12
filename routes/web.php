@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ModifierController;
 use App\Http\Controllers\MenuVariantController;
 use App\Http\Controllers\MenuModifierController;
+use App\Http\Controllers\TableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,5 +70,16 @@ Route::middleware([
     Route::post('/modifiers/{modifier}', [ModifierController::class, 'update'])->name('modifiers.update');
     Route::delete('/modifiers/{modifier}', [ModifierController::class, 'destroy'])->name('modifiers.destroy');
 
+    // tables
+    Route::get('/tables', [TableController::class, 'index'])->name('tables.index');
+    Route::post('/tables', [TableController::class, 'store'])->name('tables.store');
+    Route::get('/tables/{table}', [TableController::class, 'show'])->name('tables.show');
+    Route::post('/tables/{table}', [TableController::class, 'update'])->name('tables.update');
+    // Route::delete('/tables/{table}', [TableController::class, 'destroy'])->name('tables.destroy');
+    // Route::post('/tables/{table}/generate-qr', [TableController::class, 'generateQr'])->name('tables.generate-qr');
+
+
+    // generate QR for table
+    Route::post('/tables/{table}/regenerate-qr', [TableController::class, 'reGenerateQr'])->name('tables.regenerate-qr');
 
 });
