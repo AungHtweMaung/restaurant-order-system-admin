@@ -1,6 +1,13 @@
 <!-- partial:partials/_sidebar.html -->
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
+        <li class="nav-item {{ isset($elementActive) && $elementActive == 'tables' ? 'active' : '' }}">
+           <a class="nav-link" href="{{ route('tables.index') }}">
+               {{-- <i class="icon-grid menu-icon"></i> --}}
+               <i class="fa-solid fa-table menu-icon"></i>
+               <span class="menu-title">Table</span>
+           </a>
+       </li>
         <li class="nav-item {{ isset($elementActive) && $elementActive == 'categories' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('categories.index') }}">
                 {{-- <i class="icon-grid menu-icon"></i> --}}
