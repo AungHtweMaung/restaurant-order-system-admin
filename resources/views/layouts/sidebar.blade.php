@@ -22,13 +22,6 @@
                 <span class="menu-title">Menu</span>
             </a>
         </li>
-        <li class="nav-item {{ isset($elementActive) && $elementActive == 'menu-variants' ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('menu-variants.index') }}">
-                {{-- <i class="icon-grid menu-icon"></i> --}}
-                <i class="fa-regular fa-newspaper fa-2x menu-icon"></i>
-                <span class="menu-title">Menu Variants</span>
-            </a>
-        </li>
         <li class="nav-item {{ isset($elementActive) && $elementActive == 'modifiers' ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('modifiers.index') }}">
                 {{-- <i class="icon-grid menu-icon"></i> --}}
