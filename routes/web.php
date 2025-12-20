@@ -56,13 +56,6 @@ Route::middleware([
     // Route::post('/menus/{menu}/modifiers', [MenuModifierController::class, 'store'])
     //     ->name('menus.modifiers.store');
 
-    // menu_variants
-    Route::get('/menu-variants', [MenuVariantController::class, 'index'])->name('menu-variants.index');
-    Route::post('/menu-variants', [MenuVariantController::class, 'store'])->name('menu-variants.store');
-    Route::get('/menu-variants/{menuVariant}', [MenuVariantController::class, 'show'])->name('menu-variants.show');
-    Route::post('/menu-variants/{menuVariant}', [MenuVariantController::class, 'update'])->name('menu-variants.update');
-    Route::delete('/menu-variants/{menuVariant}', [MenuVariantController::class, 'destroy'])->name('menu-variants.destroy');
-
     // modifiers
     Route::get('/modifiers', [ModifierController::class, 'index'])->name('modifiers.index');
     Route::post('/modifiers', [ModifierController::class, 'store'])->name('modifiers.store');
