@@ -81,7 +81,7 @@
     <!-- Create Table Modal -->
     <div class="modal fade" id="createTableModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createTableModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content border-purple">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Table</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -108,7 +108,7 @@
     <div class="modal fade" id="editTableModal" tabindex="-1" aria-labelledby="editTableModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content border-purple">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Table</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

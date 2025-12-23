@@ -23,7 +23,7 @@ class MenuController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image_path')) {
-            $imagePath = $request->file('image_path')->store('menu_images', 'public');
+            $imagePath = $request->file('image_path')->store('menus', 'public');
             $data['image_path'] = $imagePath;
         }
 

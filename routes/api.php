@@ -17,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/categories', [\App\Http\Controllers\Api\CategoryController::class, 'index']);
+Route::get('/menus', [\App\Http\Controllers\Api\MenuController::class, 'index']);

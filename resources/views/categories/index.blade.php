@@ -71,7 +71,7 @@
     <!-- Create Category Modal -->
     <div class="modal fade" id="createCategoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content border-purple">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Category</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -103,7 +103,7 @@
     <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content border-purple">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Category</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

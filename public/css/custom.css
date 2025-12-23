@@ -106,9 +106,9 @@ a {
 }
 
 /* modal box backdrop fix */
-.modal-dialog {
+/* .modal-dialog {
     margin-top: 80px;
-}
+} */
 .border-purple {
     border: 3px solid #dc12d1;
 }
@@ -214,6 +214,11 @@ a {
 
 .main-content {
     margin-left: 235px;
+}
+
+/* text area resizable vertical */
+textarea {
+    resize: vertical;
 }
 
 body.sidebar-icon-only .main-content {

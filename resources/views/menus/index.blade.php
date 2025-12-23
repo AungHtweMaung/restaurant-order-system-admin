@@ -10,8 +10,6 @@
             border: 1px solid #ccc;
             /* optional, for visible focus */
         }
-
-
     </style>
 @endsection
 @section('content')
@@ -72,7 +70,8 @@
                                     data-bs-target="#editMenuModal" onclick="editMenu({{ $menu->id }})">
                                     <i class="far fa-edit"></i>
                                 </button>
-                                <form action="{{route('menus.destroy', $menu->id)}}" method="POST" style="display:inline;">
+                                <form action="{{ route('menus.destroy', $menu->id) }}" method="POST"
+                                    style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger text-white"
@@ -80,7 +79,8 @@
                                         <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </form>
-                                <a href="{{route('menus.modifiers.create', $menu)}}" type="button" class="btn btn-sm btn-primary me-2">
+                                <a href="{{ route('menus.modifiers.create', $menu) }}" type="button"
+                                    class="btn btn-sm btn-primary me-2">
                                     Update Modifiers
                                 </a>
                                 {{-- <form action="{{ route('menus.destroy', $category->id) }}" method="POST"
@@ -114,7 +114,7 @@
     <div class="modal fade" id="createMenuModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="createMenuModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="max-width: 800px;">
-            <div class="modal-content border-purple">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Menu</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
@@ -124,44 +124,42 @@
                     class="form-submit">
                     @csrf
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="category_id" class="form-label">Category <span class="text-danger">*</span></label>
-                            <select class="form-select" id="category_id" name="category_id" required>
-                                <option value="" selected disabled>Select Category</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->eng_name }} /
-                                        {{ $category->mm_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback" data-error-for="category_id"></div>
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <label for="eng_name" class="form-label">English Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="eng_name" name="eng_name" required>
+                                <div class="invalid-feedback" data-error-for="eng_name"></div>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="mm_name" class="form-label">Myanmar Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="mm_name" name="mm_name" required>
+                                <div class="invalid-feedback" data-error-for="mm_name"></div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="eng_name" class="form-label">English Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="eng_name" name="eng_name" required>
-                            <div class="invalid-feedback" data-error-for="eng_name"></div>
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <label for="category_id" class="form-label">Category <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="category_id" name="category_id" required>
+                                    <option value="" selected disabled>Select Category</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->eng_name }} /
+                                            {{ $category->mm_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback" data-error-for="category_id"></div>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" class="form-control form-control-sm" id="price" name="price"
+                                    min="0" step="1">
+                                <div class="invalid-feedback" data-error-for="price"></div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="mm_name" class="form-label">Myanmar Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="mm_name" name="mm_name" required>
-                            <div class="invalid-feedback" data-error-for="mm_name"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="price" class="form-label">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" min="0"
-                                step="1">
-                            <div class="invalid-feedback" data-error-for="price"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="eng_description" class="form-label">English Description</label>
-                            <textarea name="eng_description" id="" cols="30" rows="10" class="form-control"></textarea>
-                            <div class="invalid-feedback" data-error-for="eng_description"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="mm_description" class="form-label">Myanmar Description</label>
-                            <textarea name="mm_description" id="" cols="30" rows="10" class="form-control"></textarea>
-                            <div class="invalid-feedback" data-error-for="mm_description"></div>
-                        </div>
+
                         <div class="mb-3">
                             <label for="image_path" class="form-label">Image</label>
                             <input type="file" class="form-control text-white" id="image_path" name="image_path"
@@ -175,6 +173,19 @@
                             <div class="invalid-feedback" data-error-for="is_available"></div>
 
                         </div>
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                            <label for="eng_description" class="form-label">English Description</label>
+                            <textarea name="eng_description" id="" cols="30" rows="10" class="form-control"></textarea>
+                            <div class="invalid-feedback" data-error-for="eng_description"></div>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <label for="mm_description" class="form-label">Myanmar Description</label>
+                            <textarea name="mm_description" id="" cols="30" rows="10" class="form-control"></textarea>
+                            <div class="invalid-feedback" data-error-for="mm_description"></div>
+                        </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -188,7 +199,7 @@
     <!-- Edit Menu Modal -->
     <div class="modal fade" id="editMenuModal" tabindex="-1" aria-labelledby="editMenuModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="max-width: 800px;">
-            <div class="modal-content border-purple">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Menu</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
@@ -197,64 +208,75 @@
                 <form id="editMenuForm" action="#" method="POST" class="form-submit">
                     @csrf
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="edit_category_id" class="form-label">Category <span
-                                    class="text-danger">*</span></label>
-                            <select class="form-select" id="edit_category_id" name="edit_category_id" required>
-                                <option value="" disabled>Select Category</option>
-                                @foreach ($categories as $category)
-                                    <option {{ $category->id == $category->category_id ? 'selected' : '' }}
-                                        value="{{ $category->id }}">{{ $category->eng_name }} /
-                                        {{ $category->mm_name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback" data-error-for="edit_category_id"></div>
+
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <label for="edit_eng_name" class="form-label">English Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_eng_name" name="edit_eng_name"
+                                    required>
+                                <div class="invalid-feedback" data-error-for="edit_eng_name"></div>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="edit_mm_name" class="form-label">Myanmar Name <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit_mm_name" name="edit_mm_name"
+                                    required>
+                                <div class="invalid-feedback" data-error-for="edit_mm_name"></div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <label for="edit_category_id" class="form-label">Category <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="edit_category_id" name="edit_category_id" required>
+                                    <option value="" disabled>Select Category</option>
+                                    @foreach ($categories as $category)
+                                        <option {{ $category->id == $category->category_id ? 'selected' : '' }}
+                                            value="{{ $category->id }}">{{ $category->eng_name }} /
+                                            {{ $category->mm_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="invalid-feedback" data-error-for="edit_category_id"></div>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="edit_price" class="form-label">Price</label>
+                                <input type="number" class="form-control form-control-sm" id="edit_price"
+                                    name="edit_price" min="0" step="1">
+                                <div class="invalid-feedback" data-error-for="edit_price"></div>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="edit_eng_name" class="form-label">English Name <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="edit_eng_name" name="edit_eng_name" required>
-                            <div class="invalid-feedback" data-error-for="edit_eng_name"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_mm_name" class="form-label">Myanmar Name <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="edit_mm_name" name="edit_mm_name" required>
-                            <div class="invalid-feedback" data-error-for="edit_mm_name"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_price" class="form-label">Price</label>
-                            <input type="number" class="form-control" id="edit_price" name="edit_price" min="0"
-                                step="1">
-                            <div class="invalid-feedback" data-error-for="edit_price"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_eng_description" class="form-label">English Description</label>
-                            <textarea name="edit_eng_description" id="edit_eng_description" cols="30" rows="10" class="form-control"></textarea>
-                            <div class="invalid-feedback" data-error-for="edit_eng_description"></div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_mm_description" class="form-label">Myanmar Description</label>
-                            <textarea name="edit_mm_description" id="edit_mm_description" cols="30" rows="10" class="form-control"></textarea>
-                            <div class="invalid-feedback" data-error-for="edit_mm_description"></div>
-                        </div>
-                        <div class="mb-3">
-                            <div id="image_container">
+                            <label for="edit_image_path" class="form-label">Image</label>
+                            <div id="image_container" class="mb-2">
 
                             </div>
-                            <label for="edit_image_path" class="form-label">Image</label>
                             <input type="file" class="form-control form-control-dark text-white" id="edit_image_path"
                                 name="edit_image_path" accept="image/*">
                             <div class="invalid-feedback" data-error-for="edit_image_path"></div>
                         </div>
                         <div class="mb-3">
                             <input type="checkbox" class="form-check-input" id="edit_is_available"
-                                name="edit_is_available" checked>
+                                name="edit_is_available">
                             <label class="form-check-label" for="edit_is_available">Is Available</label>
                             <div class="invalid-feedback" data-error-for="edit_is_available"></div>
 
                         </div>
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <label for="edit_eng_description" class="form-label">English Description</label>
+                                <textarea name="edit_eng_description" id="edit_eng_description" rows="10" class="form-control"></textarea>
+                                <div class="invalid-feedback" data-error-for="edit_eng_description"></div>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="edit_mm_description" class="form-label">Myanmar Description</label>
+                                <textarea name="edit_mm_description" id="edit_mm_description" rows="10" class="form-control"></textarea>
+                                <div class="invalid-feedback" data-error-for="edit_mm_description"></div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary text-white"

@@ -22,10 +22,11 @@ class Menu extends Model
         'is_available',
     ];
 
-    public function scopeFilter(Builder $query) {
+    public function scopeFilter(Builder $query)
+    {
         if (request('searchName')) {
-            $query->where('eng_name', 'like', '%'. request('searchName'). '%')
-                ->orwhere('mm_name', 'like', '%'. request('searchName'). '%');
+            $query->where('eng_name', 'like', '%' . request('searchName') . '%')
+                ->orwhere('mm_name', 'like', '%' . request('searchName') . '%');
         }
     }
 
@@ -35,8 +36,13 @@ class Menu extends Model
     }
 
     public function modifiers()
-{
-    return $this->belongsToMany(Modifier::class, 'menu_modifiers')
-                ->withPivot('price'); // << include the pivot column here
-}
+    {
+        return $this->belongsToMany(Modifier::class, 'menu_modifiers')
+            ->withPivot('price'); // << include the pivot column here
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

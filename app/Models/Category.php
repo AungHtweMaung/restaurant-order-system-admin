@@ -22,4 +22,9 @@ class Category extends Model
                 ->orwhere('mm_name', 'like', '%'. request('searchName'). '%');
         }
     }
+
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
+    }
 }
