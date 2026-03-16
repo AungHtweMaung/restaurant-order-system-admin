@@ -37,7 +37,7 @@
                         <tr>
                             <td>{{ $index }}</td>
                             <td>{{ $modifier->eng_name }}<br><br>{{ $modifier->mm_name }}</td>
-                            <td>{{ ucfirst($modifier->type) }}</td>
+                            <td>{{ strtolower($modifier->type) === 'protein' ? 'meat' : $modifier->type }}</td>
                             <td>{{ $modifier->price ?? '-' }}</td>
                             <td>{{ ucfirst($modifier->selection_type) }}</td>
                             <td>
@@ -100,7 +100,7 @@
                             <select class="form-control" id="type" name="type" required>
                                 <option value="" disabled selected>Select Modifier Type</option>
 
-                                <option value="protein">Protein</option>
+                                <option value="protein">Meat</option>
                                 <option value="avoid">Avoid</option>
                                 <option value="addon">Addon</option>
                                 <option value="flavor">Flavor</option>
@@ -159,7 +159,7 @@
                             <label for="edit_type" class="form-label">Modifier Type</label>
                             <select class="form-control" id="edit_type" name="edit_type" required>
                                 <option value="">Select Type</option>
-                                <option value="protein">Protein</option>
+                                <option value="protein">Meat</option>
                                 <option value="avoid">Avoid</option>
                                 <option value="addon">Addon</option>
                                 <option value="flavor">Flavor</option>

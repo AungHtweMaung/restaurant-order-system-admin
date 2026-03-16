@@ -145,8 +145,8 @@
         $(document).ready(function() {
             updateWaiterCallBadge();
 
-            // Refresh every 30 seconds
-            setInterval(updateWaiterCallBadge, 30000);
+            // Refresh every 5 seconds
+            setInterval(updateWaiterCallBadge, 5000);
         });
     </script>
 
