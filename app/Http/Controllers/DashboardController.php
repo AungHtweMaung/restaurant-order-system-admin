@@ -65,6 +65,8 @@ class DashboardController extends Controller
         $labels = [];
         $data   = [];
 
+        $startOfCurrentWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
+
         for ($i = 0; $i < 7; $i++) {
             $date = $startOfCurrentWeek->copy()->addDays($i);
 
