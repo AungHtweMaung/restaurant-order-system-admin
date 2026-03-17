@@ -465,7 +465,7 @@ ${(order.is_paid || order.is_payment_cash || order.is_payment_online)
             });
 
             // Auto-refresh every 30 seconds
-            setInterval(fetchOrders, 30000);
+            setInterval(fetchOrders, 10000);
         });
     </script>
 @endpush

@@ -101,7 +101,7 @@
                                 <option value="" disabled selected>Select Modifier Type</option>
 
                                 <option value="protein">Protein</option>
-                                <option value="avoid">Avoid</option>
+                                <!-- <option value="avoid">Avoid</option> -->
                                 <option value="addon">Addon</option>
                                 <option value="flavor">Flavor</option>
                                 <option value="portion">Portion</option>
@@ -160,7 +160,7 @@
                             <select class="form-control" id="edit_type" name="edit_type" required>
                                 <option value="">Select Type</option>
                                 <option value="protein">Protein</option>
-                                <option value="avoid">Avoid</option>
+                                <!-- <option value="avoid">Avoid</option> -->
                                 <option value="addon">Addon</option>
                                 <option value="flavor">Flavor</option>
                                 <option value="portion">Portion</option>
