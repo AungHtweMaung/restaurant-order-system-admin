@@ -13,46 +13,55 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Calculate the start and end of last week
-        // $startOfCurrentWeek = Carbon::now()->startOfWeek();
-        // $endOfCurrentWeek   = Carbon::now()->endOfWeek();
-        $startOfCurrentWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
-        $endOfCurrentWeek   = Carbon::now()->endOfWeek(Carbon::SUNDAY);
+        $now = Carbon::now();
 
-        // $lastWeek = Carbon::now()->subWeek();
-        // $startOfLastWeek = $lastWeek->copy()->startOfWeek(Carbon::MONDAY);
-        // $endOfLastWeek   = $lastWeek->copy()->endOfWeek(Carbon::SUNDAY);
+        $startOfToday = $now->copy()->startOfDay();
+        $endOfToday   = $now->copy()->endOfDay();
 
-        // Fetch top 10 best-selling items from last week
+        $startOfCurrentWeek = $now->copy()->startOfWeek(Carbon::MONDAY);
+        $endOfCurrentWeek   = $now->copy()->endOfWeek(Carbon::SUNDAY);
+
         $orderItems = OrderItem::select(
-            'menus.id as menu_id',
-            'menus.eng_name',
-            'menus.mm_name',
-            DB::raw('SUM(order_items.quantity) as total_sold_quantity')
-        )
+                'menus.id as menu_id',
+                'menus.eng_name',
+                'menus.mm_name',
+                DB::raw('SUM(order_items.quantity) as total_sold_quantity')
+            )
             ->join('menus', 'menus.id', '=', 'order_items.menu_id')
-            ->leftjoin('orders', 'orders.id', '=', 'order_items.order_id')
+            ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->where('orders.status', 'completed')
             ->whereNotNull('orders.payment_verified_at')
-            ->whereBetween('order_items.created_at', [$startOfCurrentWeek, $endOfCurrentWeek])
+            ->whereBetween('orders.created_at', [$startOfToday, $endOfToday])
             ->groupBy('menus.id', 'menus.eng_name', 'menus.mm_name')
             ->orderByDesc('total_sold_quantity')
             ->limit(10)
             ->get();
 
-        $todayOrderItemCount = OrderItem::whereDate('created_at', Carbon::today())
-            ->whereHas('order', function ($query) {
-                $query->where('status', 'completed')
+        // Default = today
+        $todayOrderItemCount = OrderItem::whereHas('order', function ($query) use ($now) {
+                $query->whereDate('created_at', $now->toDateString())
+                    ->where('status', 'completed')
                     ->whereNotNull('payment_verified_at');
             })
             ->sum('quantity');
 
-        $todayTotalRevenue = Order::whereDate('created_at', Carbon::today())
+        $todayTotalRevenue = Order::whereDate('created_at', $now->toDateString())
             ->where('status', 'completed')
             ->whereNotNull('payment_verified_at')
             ->sum('total_price');
 
-        // Fetch daily order counts for the current week
+        $todayDineInCount = Order::whereDate('created_at', $now->toDateString())
+            ->where('status', 'completed')
+            ->whereNotNull('payment_verified_at')
+            ->where('order_type', 'dine_in')
+            ->count();
+
+        $todayTakeawayCount = Order::whereDate('created_at', $now->toDateString())
+            ->where('status', 'completed')
+            ->whereNotNull('payment_verified_at')
+            ->where('order_type', 'take_away')
+            ->count();
+
         $dailyOrderCounts = Order::whereBetween('created_at', [$startOfCurrentWeek, $endOfCurrentWeek])
             ->where('status', 'completed')
             ->whereNotNull('payment_verified_at')
@@ -61,21 +70,15 @@ class DashboardController extends Controller
             ->pluck('total', 'date')
             ->toArray();
 
-        // Prepare data for the chart: days of the week up to today
         $labels = [];
         $data   = [];
 
-        $startOfCurrentWeek = Carbon::now()->startOfWeek(Carbon::MONDAY);
-
         for ($i = 0; $i < 7; $i++) {
             $date = $startOfCurrentWeek->copy()->addDays($i);
-
-
-            $labels[] = $date->format('l'); // Monday, Tuesday, ...
+            $labels[] = $date->format('l');
             $data[]   = $dailyOrderCounts[$date->toDateString()] ?? 0;
         }
 
-        // Create bar chart
         $chart = Chartjs::build()
             ->name('weeklyOrders')
             ->type('bar')
@@ -85,8 +88,8 @@ class DashboardController extends Controller
                 [
                     'label' => 'Completed Orders',
                     'data' => $data,
-                    'backgroundColor' => 'rgba(54, 162, 23, 0.6)',
-                    'borderColor' => 'rgba(54, 162, 235, 1)',
+                    'backgroundColor' => 'rgba(255, 206, 86, 0.6)',
+                    'borderColor' => 'rgb(141, 136, 136)',
                     'borderWidth' => 1,
                 ]
             ])
@@ -97,48 +100,145 @@ class DashboardController extends Controller
                     'y' => [
                         'beginAtZero' => true,
                         'ticks' => [
-                            'precision' => 0, // no decimals
+                            'precision' => 0,
+                            'stepSize' => 1,
                         ],
                     ],
                 ],
             ]);
-        return view('dashboard.index', compact('orderItems', 'todayOrderItemCount', 'todayTotalRevenue', 'chart'));
+
+        return view('dashboard.index', compact(
+            'orderItems',
+            'todayOrderItemCount',
+            'todayTotalRevenue',
+            'todayDineInCount',
+            'todayTakeawayCount',
+            'chart'
+        ));
     }
 
-    public function getData($period)
-    {
-        $orderItems = $this->getOrderItemsByPeriod($period);
+    // public function getData($period)
+    // {
+    //     $orderItems = $this->getOrderItemsByPeriod($period);
 
-        return response()->json(['orderItems' => $orderItems]);
+    //     return response()->json(['orderItems' => $orderItems]);
+    // }
+
+    public function getData($period, Request $request)
+    {
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+
+        $orderItems = $this->getOrderItemsByPeriod($period, $startDate, $endDate);
+
+        return response()->json([
+            'orderItems' => $orderItems
+        ]);
     }
 
-    private function getOrderItemsByPeriod($period)
+    public function getSummaryData($period)
     {
-        if ($period === 'weekly') {
-            $startDate = Carbon::now()->startOfWeek();
-            $endDate = Carbon::now()->endOfWeek();
-        } elseif ($period === 'monthly') {
-            $startDate = Carbon::now()->startOfMonth();
-            $endDate = Carbon::now()->endOfMonth();
+        [$startDate, $endDate] = $this->getDateRangeByPeriod($period);
+
+        $orderItemCount = OrderItem::whereHas('order', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [$startDate, $endDate])
+                    ->where('status', 'completed')
+                    ->whereNotNull('payment_verified_at');
+            })
+            ->sum('quantity');
+
+        $totalRevenue = Order::whereBetween('created_at', [$startDate, $endDate])
+            ->where('status', 'completed')
+            ->whereNotNull('payment_verified_at')
+            ->sum('total_price');
+
+        $dineInCount = Order::whereBetween('created_at', [$startDate, $endDate])
+            ->where('status', 'completed')
+            ->whereNotNull('payment_verified_at')
+            ->where('order_type', 'dine_in')
+            ->count();
+
+        $takeawayCount = Order::whereBetween('created_at', [$startDate, $endDate])
+            ->where('status', 'completed')
+            ->whereNotNull('payment_verified_at')
+            ->where('order_type', 'take_away')
+            ->count();
+
+        return response()->json([
+            'orderItemCount' => $orderItemCount,
+            'totalRevenue'   => $totalRevenue,
+            'orderTypes'     => [
+                'DineIn'   => $dineInCount,
+                'Takeaway' => $takeawayCount,
+            ],
+        ]);
+    }
+
+    private function getOrderItemsByPeriod($period, $startDate = null, $endDate = null)
+    {
+        if ($startDate && $endDate) {
+            $startDate = Carbon::parse($startDate)->startOfDay();
+            $endDate = Carbon::parse($endDate)->endOfDay();
         } else {
-            // Default to weekly
-            $startDate = Carbon::now()->startOfWeek();
-            $endDate = Carbon::now()->endOfWeek();
+            [$startDate, $endDate] = $this->getDateRangeByPeriod($period);
         }
 
         return OrderItem::select(
-            'menus.id as menu_id',
-            'menus.mm_name',
-            DB::raw('SUM(order_items.quantity) as total_sold_quantity')
-        )
+                'menus.id as menu_id',
+                'menus.eng_name',
+                'menus.mm_name',
+                DB::raw('SUM(order_items.quantity) as total_sold_quantity')
+            )
             ->join('menus', 'menus.id', '=', 'order_items.menu_id')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->where('orders.status', 'completed')
             ->whereNotNull('orders.payment_verified_at')
-            ->whereBetween('order_items.created_at', [$startDate, $endDate])
-            ->groupBy('menus.id', 'menus.mm_name')
+            ->whereBetween('orders.created_at', [$startDate, $endDate])
+            ->groupBy('menus.id', 'menus.eng_name', 'menus.mm_name')
             ->orderByDesc('total_sold_quantity')
             ->limit(10)
             ->get();
+    }
+
+    // private function getOrderItemsByPeriod($period)
+    // {
+    //     [$startDate, $endDate] = $this->getDateRangeByPeriod($period);
+
+    //     return OrderItem::select(
+    //             'menus.id as menu_id',
+    //             'menus.eng_name',
+    //             'menus.mm_name',
+    //             DB::raw('SUM(order_items.quantity) as total_sold_quantity')
+    //         )
+    //         ->join('menus', 'menus.id', '=', 'order_items.menu_id')
+    //         ->join('orders', 'orders.id', '=', 'order_items.order_id')
+    //         ->where('orders.status', 'completed')
+    //         ->whereNotNull('orders.payment_verified_at')
+    //         ->whereBetween('orders.created_at', [$startDate, $endDate])
+    //         ->groupBy('menus.id', 'menus.eng_name', 'menus.mm_name')
+    //         ->orderByDesc('total_sold_quantity')
+    //         ->limit(10)
+    //         ->get();
+    // }
+
+    private function getDateRangeByPeriod($period)
+    {
+        $now = Carbon::now();
+
+        if ($period === 'today') {
+            $startDate = $now->copy()->startOfDay();
+            $endDate   = $now->copy()->endOfDay();
+        } elseif ($period === 'weekly') {
+            $startDate = $now->copy()->startOfWeek(Carbon::MONDAY);
+            $endDate   = $now->copy()->endOfWeek(Carbon::SUNDAY);
+        } elseif ($period === 'monthly') {
+            $startDate = $now->copy()->startOfMonth();
+            $endDate   = $now->copy()->endOfMonth();
+        } else {
+            $startDate = $now->copy()->startOfDay();
+            $endDate   = $now->copy()->endOfDay();
+        }
+
+        return [$startDate, $endDate];
     }
 }

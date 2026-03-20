@@ -35,6 +35,12 @@ Route::middleware([
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard/order-items/{period}', [DashboardController::class, 'getData'])->name('dashboard.data');
 
+    Route::get('/dashboard/data/{period}', [DashboardController::class, 'getData'])
+        ->name('dashboard.data');
+
+    Route::get('/dashboard/summary-data/{period}', [DashboardController::class, 'getSummaryData'])
+        ->name('dashboard.summary.data');
+        
     // categories
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
