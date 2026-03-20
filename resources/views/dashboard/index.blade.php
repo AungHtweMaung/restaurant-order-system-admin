@@ -39,7 +39,7 @@
                                 <input type="date" id="end-date" class="form-control">
                             </div>
 
-                            <div class="col-md-12 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
+                            <div class="col-md-7 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
                                 <button type="button" class="btn btn-danger text-white w-100 w-sm-auto"
                                     id="reset-date-filter">Reset</button>
                                 <button type="button" class="btn btn-primary w-100 w-sm-auto"
@@ -108,7 +108,7 @@
                                 <input type="date" id="summary-end-date" class="form-control">
                             </div>
 
-                            <div class="col-md-12 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
+                            <div class="col-md-7 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
                                 <button type="button" class="btn btn-danger w-100 text-white" id="summary-reset">Reset</button>
                                 <button type="button" class="btn btn-primary w-100" id="summary-search">Search</button>
                             </div>
@@ -166,7 +166,7 @@
                                 <label for="chart-end-date" class="form-label fw-semibold">End Date</label>
                                 <input type="date" id="chart-end-date" class="form-control">
                             </div>
-                            <div class="col-md-12 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
+                            <div class="col-md-7 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
                                 <button type="button" class="btn btn-danger text-white w-100 w-sm-auto"
                                     id="chart-reset-btn">Reset</button>
                                 <button type="button" class="btn btn-primary w-100 w-sm-auto"
