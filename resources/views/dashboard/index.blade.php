@@ -7,6 +7,8 @@
         <div class="col-12 mt-2">
             <h2 class="text-center fw-bold">Dashboard</h2>
         </div>
+
+        <h3>Today - {{ \Carbon\Carbon::now()->format('m/d/Y') }}</h3>
         <div class="col-md-5">
             <div class="card shadow border-0">
                 <div class="card-header bg-warning text-white d-flex align-items-center justify-content-between">
@@ -14,32 +16,38 @@
                         <i class="fas fa-chart-line me-2"></i>
                         <h5 class="mb-0">Most Selling Items</h5>
                     </div>
-                    <div class="btn-group" role="group">
-                       <button type="button" class="btn btn-sm btn-outline-light active" id="today-btn">Today</button>
-                        <button type="button" class="btn btn-sm btn-outline-light" id="weekly-btn">Weekly</button>
-                        <button type="button" class="btn btn-sm btn-outline-light" id="monthly-btn">Monthly</button>
+                    <div>
+
+                        <div class="btn-group" role="group">
+
+                            <button type="button" class="btn btn-sm btn-outline-light active" id="today-btn">Today</button>
+                            <button type="button" class="btn btn-sm btn-outline-light" id="weekly-btn">Weekly</button>
+                            <button type="button" class="btn btn-sm btn-outline-light" id="monthly-btn">Monthly</button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
                     <div id="most-selling-date-filter" class="mb-3" style="display: none;">
                         <div class="row align-items-end g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="start-date" class="form-label fw-semibold">Start Date</label>
                                 <input type="date" id="start-date" class="form-control">
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label for="end-date" class="form-label fw-semibold">End Date</label>
                                 <input type="date" id="end-date" class="form-control">
                             </div>
 
-                            <div class="col-md-4 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
-                                <button type="button" class="btn btn-danger w-100 w-sm-auto" id="reset-date-filter">Reset</button>
-                                <button type="button" class="btn btn-primary w-100 w-sm-auto" id="search-date-filter">Search</button>
+                            <div class="col-md-12 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
+                                <button type="button" class="btn btn-danger text-white w-100 w-sm-auto"
+                                    id="reset-date-filter">Reset</button>
+                                <button type="button" class="btn btn-primary w-100 w-sm-auto"
+                                    id="search-date-filter">Search</button>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="table-responsive">
                         <table class="table table-striped table-hover mb-0">
                             <thead class="table-light">
@@ -79,27 +87,29 @@
                         <h5 class="mb-0">Order Summary</h5>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-sm btn-outline-light active" id="summary-today-btn">Today</button>
+                        <button type="button" class="btn btn-sm btn-outline-light active"
+                            id="summary-today-btn">Today</button>
                         <button type="button" class="btn btn-sm btn-outline-light" id="summary-weekly-btn">Weekly</button>
-                        <button type="button" class="btn btn-sm btn-outline-light" id="summary-monthly-btn">Monthly</button>
+                        <button type="button" class="btn btn-sm btn-outline-light"
+                            id="summary-monthly-btn">Monthly</button>
                     </div>
                 </div>
 
                 <div class="card-body">
                     <div id="summary-date-filter" class="mb-3" style="display: none;">
                         <div class="row align-items-end g-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label fw-semibold">Start Date</label>
                                 <input type="date" id="summary-start-date" class="form-control">
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label fw-semibold">End Date</label>
                                 <input type="date" id="summary-end-date" class="form-control">
                             </div>
 
-                            <div class="col-md-4 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
-                                <button type="button" class="btn btn-danger w-100" id="summary-reset">Reset</button>
+                            <div class="col-md-12 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
+                                <button type="button" class="btn btn-danger w-100 text-white" id="summary-reset">Reset</button>
                                 <button type="button" class="btn btn-primary w-100" id="summary-search">Search</button>
                             </div>
                         </div>
@@ -132,20 +142,48 @@
                 </div>
             </div>
 
-                <!-- Weekly Order Count Card -->
-                <div class="card shadow border-0 mt-4">
-                    <div style="background-color: rgba(255, 193, 0, 1)" class="card-header text-white">
+            <!-- Weekly Order Count Card -->
+            <div class="card shadow border-0 mt-4">
+                <div class="card-header bg-warning text-white d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-chart-bar me-2"></i>
                         <h5 class="mb-0">Weekly Order Counts</h5>
                     </div>
-                    <div class="card-body" style="height: 400px;">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-light active"
+                            id="chart-weekly-btn">Weekly</button>
+                        <button type="button" class="btn btn-sm btn-outline-light" id="chart-custom-btn">Custom</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="chart-date-filter" class="mb-3" style="display: none;">
+                        <div class="row align-items-end g-3">
+                            <div class="col-md-6">
+                                <label for="chart-start-date" class="form-label fw-semibold">Start Date</label>
+                                <input type="date" id="chart-start-date" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="chart-end-date" class="form-label fw-semibold">End Date</label>
+                                <input type="date" id="chart-end-date" class="form-control">
+                            </div>
+                            <div class="col-md-12 d-flex flex-column flex-sm-row gap-2 align-items-stretch">
+                                <button type="button" class="btn btn-danger text-white w-100 w-sm-auto"
+                                    id="chart-reset-btn">Reset</button>
+                                <button type="button" class="btn btn-primary w-100 w-sm-auto"
+                                    id="chart-search-btn">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="weeklyOrders-chart-container" class="chart-container"
+                        style="height: 350px; position: relative;">
                         {!! $chart->render() !!}
                     </div>
                 </div>
             </div>
-            </div>
         </div>
     </div>
-
+    </div>
+    </div>
 @endsection
 
 @push('js')
@@ -285,7 +323,7 @@
             });
 
             // Order Summary buttons
-             $('#summary-today-btn').on('click', function() {
+            $('#summary-today-btn').on('click', function() {
                 setSummaryActive($(this));
                 currentSummaryPeriod = 'today';
                 $('#summary-date-filter').hide();
@@ -391,6 +429,129 @@
                     $('#summary-date-filter').hide();
                     loadSummaryData('today');
                 }
+            });
+
+            // Chart Filtering - Robust chart instance detection
+            let currentChartPeriod = 'weekly';
+            let chartInstance = null;
+
+            function getChartInstance() {
+                const canvas = document.querySelector('#weeklyOrders-chart-container canvas');
+                return canvas ? Chart.getChart(canvas) : null;
+            }
+
+            // Try to capture chart instance with retries
+            function captureChartInstance() {
+                chartInstance = getChartInstance();
+                if (!chartInstance) {
+                    console.log('Chart not ready, retrying...');
+                    setTimeout(captureChartInstance, 500);
+                } else {
+                    console.log('Chart instance captured successfully!');
+                }
+            }
+
+            // Initial capture + retry mechanism
+            setTimeout(captureChartInstance, 500);
+
+            // Recapture on window resize/chart redraw
+            $(window).on('resize', function() {
+                setTimeout(() => {
+                    chartInstance = getChartInstance();
+                }, 100);
+            });
+
+            $('#chart-weekly-btn').on('click', function() {
+                setChartActive($(this));
+                currentChartPeriod = 'weekly';
+                $('#chart-date-filter').hide();
+                $('#chart-start-date').val('');
+                $('#chart-end-date').val('');
+                loadChartData('weekly');
+            });
+
+            $('#chart-custom-btn').on('click', function() {
+                setChartActive($(this));
+                currentChartPeriod = 'custom';
+                setChartDefaultDates('weekly');
+                $('#chart-date-filter').show();
+                loadChartData('weekly', $('#chart-start-date').val(), $('#chart-end-date').val());
+            });
+
+            function setChartActive(activeBtn) {
+                $('#chart-weekly-btn, #chart-custom-btn').removeClass('active');
+                activeBtn.addClass('active');
+            }
+
+            function loadChartData(period, startDate = '', endDate = '') {
+                $.ajax({
+                    url: '{{ route('dashboard.chart.data', ':period') }}'.replace(':period', period),
+                    method: 'GET',
+                    data: {
+                        start_date: startDate,
+                        end_date: endDate
+                    },
+                    success: function(response) {
+                        updateChart(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading chart data:', error);
+                        toastr.error('Failed to load chart data');
+                    }
+                });
+            }
+
+            function updateChart(data) {
+                let instance = getChartInstance();
+                if (!instance) {
+                    console.warn('Chart instance not found - retrying capture');
+                    setTimeout(() => updateChart(data), 100);
+                    return;
+                }
+
+                chartInstance = instance; // Update cached instance
+                instance.data.labels = data.labels;
+                instance.data.datasets[0].data = data.data;
+                instance.update('none');
+                console.log('Chart updated with new data');
+            }
+
+            function setChartDefaultDates(period) {
+                const today = new Date();
+                let startDate = new Date();
+                let endDate = new Date();
+
+                if (period === 'weekly') {
+                    const day = today.getDay();
+                    const diffToMonday = day === 0 ? -6 : 1 - day;
+                    startDate.setDate(today.getDate() + diffToMonday);
+                    endDate.setDate(startDate.getDate() + 6);
+                }
+
+                $('#chart-start-date').val(formatDate(startDate));
+                $('#chart-end-date').val(formatDate(endDate));
+            }
+
+            $('#chart-search-btn').on('click', function() {
+                const startDate = $('#chart-start-date').val();
+                const endDate = $('#chart-end-date').val();
+
+                if (!startDate || !endDate) {
+                    toastr.error('Please select both start and end dates');
+                    return;
+                }
+
+                if (startDate > endDate) {
+                    toastr.error('Start date cannot be later than end date');
+                    return;
+                }
+
+                loadChartData('custom', startDate, endDate);
+            });
+
+            $('#chart-reset-btn').on('click', function() {
+                setChartDefaultDates('weekly');
+                loadChartData('weekly', $('#chart-start-date').val(), $('#chart-end-date').val());
             });
 
             function formatDate(date) {

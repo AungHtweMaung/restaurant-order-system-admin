@@ -40,7 +40,10 @@ Route::middleware([
 
     Route::get('/dashboard/summary-data/{period}', [DashboardController::class, 'getSummaryData'])
         ->name('dashboard.summary.data');
-        
+
+    Route::get('/dashboard/chart-data/{period}', [DashboardController::class, 'getChartData'])
+        ->name('dashboard.chart.data');
+
     // categories
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');

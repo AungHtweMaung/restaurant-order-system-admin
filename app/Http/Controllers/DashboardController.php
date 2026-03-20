@@ -75,7 +75,7 @@ class DashboardController extends Controller
 
         for ($i = 0; $i < 7; $i++) {
             $date = $startOfCurrentWeek->copy()->addDays($i);
-            $labels[] = $date->format('l');
+            $labels[] = $date->format('l') . "\n" . $date->format('M d');
             $data[]   = $dailyOrderCounts[$date->toDateString()] ?? 0;
         }
 
@@ -198,9 +198,16 @@ class DashboardController extends Controller
             ->get();
     }
 
-    private function getDateRangeByPeriod($period)
+    private function getDateRangeByPeriod($period, $customStart = null, $customEnd = null)
     {
         $now = Carbon::now();
+
+        if ($customStart && $customEnd) {
+            return [
+                Carbon::parse($customStart)->startOfDay(),
+                Carbon::parse($customEnd)->endOfDay()
+            ];
+        }
 
         if ($period === 'today') {
             $startDate = $now->copy()->startOfDay();
@@ -217,5 +224,42 @@ class DashboardController extends Controller
         }
 
         return [$startDate, $endDate];
+    }
+
+    public function getChartData($period, Request $request)
+    {
+        [$startDate, $endDate] = $this->getDateRangeByPeriod($period, $request->start_date, $request->end_date);
+
+        $dailyOrderCounts = Order::whereBetween('created_at', [$startDate, $endDate])
+            ->where('status', 'completed')
+            ->whereNotNull('payment_verified_at')
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('total', 'date')
+            ->toArray();
+
+        $dates = collect(range(0, $endDate->diffInDays($startDate)))
+            ->map(function ($i) use ($startDate) {
+                return $startDate->copy()->addDays($i);
+            });
+
+        $labels = $dates->map(function ($date) {
+            return $date->format('l') . "\n" . $date->format('M d');
+        })->toArray();
+
+        $data = [];
+
+        foreach ($dates as $date) {
+            $data[] = $dailyOrderCounts[$date->toDateString()] ?? 0;
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'data' => $data,
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d'),
+            'period' => $period
+        ]);
     }
 }
