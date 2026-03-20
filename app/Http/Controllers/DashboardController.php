@@ -117,13 +117,6 @@ class DashboardController extends Controller
         ));
     }
 
-    // public function getData($period)
-    // {
-    //     $orderItems = $this->getOrderItemsByPeriod($period);
-
-    //     return response()->json(['orderItems' => $orderItems]);
-    // }
-
     public function getData($period, Request $request)
     {
         $startDate = $request->start_date;
@@ -136,9 +129,14 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function getSummaryData($period)
+    public function getSummaryData($period, Request $request)
     {
-        [$startDate, $endDate] = $this->getDateRangeByPeriod($period);
+        if (!empty($request->start_date) && !empty($request->end_date)) {
+            $startDate = Carbon::parse($request->start_date)->startOfDay();
+            $endDate   = Carbon::parse($request->end_date)->endOfDay();
+        } else {
+            [$startDate, $endDate] = $this->getDateRangeByPeriod($period);
+        }
 
         $orderItemCount = OrderItem::whereHas('order', function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('created_at', [$startDate, $endDate])
@@ -176,7 +174,7 @@ class DashboardController extends Controller
 
     private function getOrderItemsByPeriod($period, $startDate = null, $endDate = null)
     {
-        if ($startDate && $endDate) {
+        if (!empty($startDate) && !empty($endDate)) {
             $startDate = Carbon::parse($startDate)->startOfDay();
             $endDate = Carbon::parse($endDate)->endOfDay();
         } else {
@@ -199,27 +197,6 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
     }
-
-    // private function getOrderItemsByPeriod($period)
-    // {
-    //     [$startDate, $endDate] = $this->getDateRangeByPeriod($period);
-
-    //     return OrderItem::select(
-    //             'menus.id as menu_id',
-    //             'menus.eng_name',
-    //             'menus.mm_name',
-    //             DB::raw('SUM(order_items.quantity) as total_sold_quantity')
-    //         )
-    //         ->join('menus', 'menus.id', '=', 'order_items.menu_id')
-    //         ->join('orders', 'orders.id', '=', 'order_items.order_id')
-    //         ->where('orders.status', 'completed')
-    //         ->whereNotNull('orders.payment_verified_at')
-    //         ->whereBetween('orders.created_at', [$startDate, $endDate])
-    //         ->groupBy('menus.id', 'menus.eng_name', 'menus.mm_name')
-    //         ->orderByDesc('total_sold_quantity')
-    //         ->limit(10)
-    //         ->get();
-    // }
 
     private function getDateRangeByPeriod($period)
     {
